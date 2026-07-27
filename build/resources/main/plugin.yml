@@ -1,0 +1,16 @@
+name: testPlugin_A
+description: 用于私服测试正式学习插件制作的第一个插件
+version: '1.0.0'
+
+main: com.testPlugin_A.main.Main
+api-version: '1.21.11'
+load: POSTWORLD
+
+authors: [ 天辰Stry ]
+
+commands:
+  testCommand:
+    description: "测试指令"
+    permission: testPlugin_A.Main
+    aliases: tp_A
+

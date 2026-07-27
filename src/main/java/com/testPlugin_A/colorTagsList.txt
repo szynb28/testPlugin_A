@@ -1,0 +1,29 @@
+🎨 标准 16 色（和 Minecraft 原版一一对应）
+表格
+标签	效果	对应 § 代码
+<black>	黑色	§0
+<dark_blue>	深蓝	§1
+<dark_green>	深绿	§2
+<dark_aqua>	深青	§3
+<dark_red>	深红	§4
+<dark_purple>	深紫	§5
+<gold>	金色/橙色	§6
+<gray>	灰色	§7
+<dark_gray>	深灰	§8
+<blue>	蓝色	§9
+<green>	绿色	§a
+<aqua>	青色	§b
+<red>	红色	§c
+<light_purple>	亮紫/粉色	§d
+<yellow>	黄色	§e
+<white>	白色	§f
+注意：没有 <pink>！ 粉色效果用 <light_purple> 或 <#FF69B4> 喵～
+✨ 格式/样式标签（控制文字样式）
+表格
+标签	效果
+<bold> / <b>	粗体
+<italic> / <em> / <i>	斜体
+<underlined> / <u>	<u>
+<strikethrough> / <st>	~~删除线~~
+<obfuscated> / <obf>	随机闪烁字符
+<reset>	重置所有格式
