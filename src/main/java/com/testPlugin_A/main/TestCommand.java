@@ -50,6 +50,9 @@ public class TestCommand implements CommandExecutor {
                                                     data.gameA_maomaoAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_AMOUNT),
                                                     data.gameA_maomaoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_COST));
             player.openInventory(gameInv);
+            // 切换玩家页面状态
+            data.scene.putIfAbsent(playerUUID, "Minecraft");
+            data.scene.put(playerUUID, "gameA");
 
             return true;
         }

@@ -4,6 +4,7 @@ import com.testPlugin_A.data.DataInitiator;
 import com.testPlugin_A.main.Main;
 import com.testPlugin_A.main.listenerLogic.inventoryClick.GameA_clickLogic;
 import com.testPlugin_A.main.listenerLogic.inventoryClick.HelpMenu_clickLogic;
+import com.testPlugin_A.main.listenerLogic.inventoryClose.All_CloseLogic;
 import com.testPlugin_A.main.listenerLogic.timerExecuting.GameA_timerLogic;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -75,5 +77,15 @@ public class Listener implements org.bukkit.event.Listener {
                 gameATimerLogic.logic();
             }
         }.runTaskTimer(Main.main, 0L, 20L); // 20 tick = 1 秒
+    }
+
+    // 玩家退出容器时执行的逻辑
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent closeEvent){
+        // 初始化容器退出逻辑
+        All_CloseLogic allCloseLogic = new All_CloseLogic(closeEvent, data);
+
+        // 执行退出容器时的逻辑
+        allCloseLogic.logic();
     }
 }

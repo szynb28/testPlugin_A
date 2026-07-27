@@ -9,9 +9,13 @@ public final class Main extends JavaPlugin {
 
     public static Main main;
     private DataInitiator dataInitiator;
+    private Listener listener;
+    private TestCommand testCommand;
 
     @Override
     public void onEnable() {
+        main = this; // 先给main赋值
+
         System.out.println("==================================");
         System.out.println("TestPlugin_A.jar 运行成功");
         System.out.println("==================================");
@@ -19,14 +23,19 @@ public final class Main extends JavaPlugin {
         // 创建唯一的数据核心实例
         dataInitiator = new DataInitiator();
 
+        // 创建command和listener实例
+        listener = new Listener(dataInitiator);
+        testCommand = new TestCommand(dataInitiator);
+
         // 传递同一个 dataInitiator 给 Listener 和 TestCommand
-        Bukkit.getPluginCommand("testCommand").setExecutor(new TestCommand(dataInitiator));
-        Bukkit.getPluginManager().registerEvents(new Listener(dataInitiator), this);
+        Bukkit.getPluginCommand("testCommand").setExecutor(testCommand);
+        Bukkit.getPluginManager().registerEvents(listener, this);
+
+        // 调用随时间流逝持续执行的逻辑
+        listener.timerLogic();
 
         // 生成配置文件
         saveDefaultConfig();
-
-        main = this;
     }
 
     @Override

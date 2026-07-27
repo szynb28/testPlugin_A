@@ -45,6 +45,19 @@ public class ItemsPack {
         item.setItemMeta(itemMeta);
         return item;
     }
+    static public ItemStack get__item_buyError(){
+        ItemStack item = new ItemStack(Material.getMaterial("BARRIER"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<red>购买失败喵...</red>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gold>咦，购买失败惹</gold> <white>Σ( ° △ °)</white>"),
+                MiniMessage.miniMessage().deserialize("<gold>可能没有足够的资源喵..</gold>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gray>等攒够了资源再来戳我吧~</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
     static public ItemStack get__item_gameAmaomao(int maomaoAmount, double maomaoCost){
         ItemStack item = new ItemStack(Material.getMaterial("COD"), 1);
         ItemMeta itemMeta = item.getItemMeta();
