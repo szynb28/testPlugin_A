@@ -73,4 +73,19 @@ public class ItemsPack {
         item.setItemMeta(itemMeta);
         return item;
     }
+    static public ItemStack get__item_gameAmaowo(int maowoAmount, double maowoCost){
+        ItemStack item = new ItemStack(Material.getMaterial("BRICKS"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:red:gold>猫窝基建</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>往主人家的大旷野上基建猫窝!~</gray>"),
+                MiniMessage.miniMessage().deserialize("<gray>更好的猫窝环境可以提升猫猫的工作效率☆</gray>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gold><b>当前拥有: </gold><yellow>" + maowoAmount + "</yellow>"),
+                MiniMessage.miniMessage().deserialize("<green><b>购买花费: </green><light_purple>" + maowoCost + "</light_purple>"),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
 }
