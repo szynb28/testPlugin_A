@@ -13,7 +13,23 @@ public class DataInitiator {
 
     public HashMap<UUID, Integer> gameA_maomaoAmount; // 玩家持有的猫猫数量
     public HashMap<UUID, Double> gameA_maomaoCost; // 玩家购买猫猫的费用
-    public HashMap<UUID, Boolean> gameA_isShowMaomaoBuyingError; // 是否显示猫猫购买失败的提示
+    public HashMap<UUID, Integer> gameA_maowoAmount; // 玩家持有的猫猫数量
+    public HashMap<UUID, Double> gameA_maowoCost; // 玩家购买猫猫的费用
+    public HashMap<UUID, Integer> gameA_zhuangyuanAmount; // 玩家持有的猫猫数量
+    public HashMap<UUID, Double> gameA_zhuangyuanCost; // 玩家购买猫猫的费用
+    public HashMap<UUID, Integer> gameA_luzaoAmount; // 玩家持有的猫猫数量
+    public HashMap<UUID, Double> gameA_luzaoCost; // 玩家购买猫猫的费用
+    public HashMap<UUID, Integer> gameA_kejiAmount; // 玩家持有的猫猫数量
+    public HashMap<UUID, Double> gameA_kejiCost; // 玩家购买猫猫的费用
+    public HashMap<UUID, Integer> gameA_gongchangAmount; // 玩家持有的猫猫数量
+    public HashMap<UUID, Double> gameA_gongchangCost; // 玩家购买猫猫的费用
+    public HashMap<UUID, Integer> gameA_fuwenAmount; // 玩家持有的猫猫数量
+    public HashMap<UUID, Double> gameA_fuwenCost; // 玩家购买猫猫的费用
+    public HashMap<UUID, Integer> gameA_shuijingAmount; // 玩家持有的猫猫数量
+    public HashMap<UUID, Double> gameA_shuijingCost; // 玩家购买猫猫的费用
+    public HashMap<UUID, Integer> gameA_huojianAmount; // 玩家持有的猫猫数量
+    public HashMap<UUID, Double> gameA_huojianCost; // 玩家购买猫猫的费用
+
 
     public DataInitiator(){
         // 初始化 全局内容
@@ -24,6 +40,22 @@ public class DataInitiator {
 
         gameA_maomaoAmount = new HashMap<>();
         gameA_maomaoCost = new HashMap<>();
-        gameA_isShowMaomaoBuyingError = new HashMap<>();
+        gameA_maowoAmount = new HashMap<>();
+        gameA_maowoCost = new HashMap<>();
+        gameA_zhuangyuanAmount = new HashMap<>();
+        gameA_zhuangyuanCost = new HashMap<>();
+        gameA_luzaoAmount = new HashMap<>();
+        gameA_luzaoCost = new HashMap<>();
+        gameA_kejiAmount = new HashMap<>();
+        gameA_kejiCost = new HashMap<>();
+        gameA_gongchangAmount = new HashMap<>();
+        gameA_gongchangCost = new HashMap<>();
+        gameA_fuwenAmount = new HashMap<>();
+        gameA_fuwenCost = new HashMap<>();
+        gameA_shuijingAmount = new HashMap<>();
+        gameA_shuijingCost = new HashMap<>();
+        gameA_huojianAmount = new HashMap<>();
+        gameA_huojianCost = new HashMap<>();
+
     }
 }

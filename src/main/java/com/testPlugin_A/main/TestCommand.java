@@ -48,7 +48,23 @@ public class TestCommand implements CommandExecutor {
             UUID playerUUID = player.getUniqueId();
             Inventory gameInv = get__inventory_gameA(data.gameA_cookieAmount.getOrDefault(playerUUID, 0.00),
                                                     data.gameA_maomaoAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_AMOUNT),
-                                                    data.gameA_maomaoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_COST));
+                                                    data.gameA_maomaoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_COST),
+                                                    data.gameA_maowoAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOWO_AMOUNT),
+                                                    data.gameA_maowoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOWO_COST),
+                                                    data.gameA_zhuangyuanAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_ZHUANGYUAN_AMOUNT),
+                                                    data.gameA_zhuangyuanCost.getOrDefault(playerUUID, GAME_A_DEFAULT_ZHUANGYUAN_COST),
+                                                    data.gameA_luzaoAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_LUZAO_AMOUNT),
+                                                    data.gameA_luzaoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_LUZAO_COST),
+                                                    data.gameA_kejiAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_KEJI_AMOUNT),
+                                                    data.gameA_kejiCost.getOrDefault(playerUUID, GAME_A_DEFAULT_KEJI_COST),
+                                                    data.gameA_gongchangAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_GONGCHANG_AMOUNT),
+                                                    data.gameA_gongchangCost.getOrDefault(playerUUID, GAME_A_DEFAULT_GONGCHANG_COST),
+                                                    data.gameA_fuwenAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_FUWEN_AMOUNT),
+                                                    data.gameA_fuwenCost.getOrDefault(playerUUID, GAME_A_DEFAULT_FUWEN_COST),
+                                                    data.gameA_shuijingAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_SHUIJING_AMOUNT),
+                                                    data.gameA_shuijingCost.getOrDefault(playerUUID, GAME_A_DEFAULT_SHUIJING_COST),
+                                                    data.gameA_huojianAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_HUOJIAN_AMOUNT),
+                                                    data.gameA_huojianCost.getOrDefault(playerUUID, GAME_A_DEFAULT_HUOJIAN_COST));
             player.openInventory(gameInv);
             // 切换玩家页面状态
             data.scene.putIfAbsent(playerUUID, "Minecraft");

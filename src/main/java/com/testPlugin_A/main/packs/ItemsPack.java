@@ -88,4 +88,109 @@ public class ItemsPack {
         item.setItemMeta(itemMeta);
         return item;
     }
+    static public ItemStack get__item_gameAzhuangyuan(int zhuangyuanAmount, double zhuangyuanCost){
+        ItemStack item = new ItemStack(Material.getMaterial("BELL"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:yellow:gold>猫猫庄园</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>一个独属于猫猫大厨的庄园喵~</gray>"),
+                MiniMessage.miniMessage().deserialize("<gray>庄园里不仅有大厨房、大炉灶...还有一群勤劳的猫猫!</gray>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gold><b>当前拥有: </gold><yellow>" + zhuangyuanAmount + "</yellow>"),
+                MiniMessage.miniMessage().deserialize("<green><b>购买花费: </green><light_purple>" + zhuangyuanCost + "</light_purple>"),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameAluzao(int luzaoAmount, double luzaoCost){
+        ItemStack item = new ItemStack(Material.getMaterial("FURNACE_MINECART"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:red:dark_red>移动炉灶基地</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>一个可以让厨房跑来跑去的移动基地☆</gray>"),
+                MiniMessage.miniMessage().deserialize("<gray>从此猫猫大厨可以一边旅游一边制作曲奇饼干啦</gray>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gold><b>当前拥有: </gold><yellow>" + luzaoAmount + "</yellow>"),
+                MiniMessage.miniMessage().deserialize("<green><b>购买花费: </green><light_purple>" + luzaoCost + "</light_purple>"),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameAkeji(int kejiAmount, double kejiCost){
+        ItemStack item = new ItemStack(Material.getMaterial("REDSTONE"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:aqua:blue>饼干科技</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>猫猫博士研究出的饼干流水线工程!</gray>"),
+                MiniMessage.miniMessage().deserialize("<gray>猫猫大厨们提供的秘方在机械加持下如虎添翼~</gray>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gold><b>当前拥有: </gold><yellow>" + kejiAmount + "</yellow>"),
+                MiniMessage.miniMessage().deserialize("<green><b>购买花费: </green><light_purple>" + kejiCost + "</light_purple>"),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameAgongchang(int gongchangAmount, double gongchangCost){
+        ItemStack item = new ItemStack(Material.getMaterial("WAXED_CHISELED_COPPER"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:yellow:light_purple>全自动饼干工厂</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>一个只有机械臂总控的大工厂☆</gray>"),
+                MiniMessage.miniMessage().deserialize("<gray>猫猫们只要在后台看着流水线自己造化就行啦~</gray>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gold><b>当前拥有: </gold><yellow>" + gongchangAmount + "</yellow>"),
+                MiniMessage.miniMessage().deserialize("<green><b>购买花费: </green><light_purple>" + gongchangCost + "</light_purple>"),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameAfuwen(int fuwenAmount, double fuwenCost){
+        ItemStack item = new ItemStack(Material.getMaterial("FLOW_POTTERY_SHERD"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:gold:gray>饼干符文</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>猫猫们在地层下发掘出了可以让饼干变得更好吃的符文阵法۞</gray>"),
+                MiniMessage.miniMessage().deserialize("<gray>有了这种神秘力量存在，饼干的销量被指数级提升了!</gray>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gold><b>当前拥有: </gold><yellow>" + fuwenAmount + "</yellow>"),
+                MiniMessage.miniMessage().deserialize("<green><b>购买花费: </green><light_purple>" + fuwenCost + "</light_purple>"),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameAshuijing(int shuijingAmount, double shuijingCost){
+        ItemStack item = new ItemStack(Material.getMaterial("AMETHYST_SHARD"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:light_purple:dark_purple>水晶饼干碎片</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>在远处的水晶山上，据说有珍贵的“水晶饼干碎片”</gray>"),
+                MiniMessage.miniMessage().deserialize("<gray>猫猫们辛苦开采的零星饼干碎片就能极大地提高饼干的含金量!</gray>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gold><b>当前拥有: </gold><yellow>" + shuijingAmount + "</yellow>"),
+                MiniMessage.miniMessage().deserialize("<green><b>购买花费: </green><light_purple>" + shuijingCost + "</light_purple>"),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameAhuojian(int huojianAmount, double huojianCost){
+        ItemStack item = new ItemStack(Material.getMaterial("FIREWORK_ROCKET"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:red:gold>喵星登月计划</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>据说遥远的月球上有着比曲奇好吃的东西 —— 月饼!</gray>"),
+                MiniMessage.miniMessage().deserialize("<gray>猫猫们乘着火箭离开喵星，去挖掘月球上的月饼酱 ☽</gray>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gold><b>当前拥有: </gold><yellow>" + huojianAmount + "</yellow>"),
+                MiniMessage.miniMessage().deserialize("<green><b>购买花费: </green><light_purple>" + huojianCost + "</light_purple>"),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
 }
