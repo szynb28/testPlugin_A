@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +22,7 @@ import org.joml.Vector3f;
 import static com.testPlugin_A.main.packs.ItemsPack.*;
 import static com.testPlugin_A.main.packs.ConstantPack.*;
 import static com.testPlugin_A.main.packs.InventoriesPack.*;
+import static com.testPlugin_A.main.packs.EntitiesPack.*;
 
 public class TestCommand implements CommandExecutor {
 
@@ -78,25 +80,14 @@ public class TestCommand implements CommandExecutor {
             interaction.setResponsive(true);       // 右键有反馈动画
 
             // 设置方块展示实体
-            BlockDisplay blockDisplay = player.getWorld().spawn(playerLoc, BlockDisplay.class, entity -> {
-                // 显示一个钻石块
-                entity.setBlock(Material.DIAMOND_BLOCK.createBlockData());
-
-                // 设置变换：向上浮0.5格，缩小到0.5倍
-                entity.setTransformation(new Transformation(
-                        new Vector3f(0f, 0.5f, 0f),  // 本地平移(相对spawn位置)
-                        new Quaternionf(),                   // 左旋转（不转）
-                        new Vector3f(0.5f, 0.5f, 0.5f), // 缩放（0.5倍）
-                        new Quaternionf()                    // 右旋转（不转）
-                ));
-
-                entity.setViewRange(50f);                    // 可视距离
-                entity.setBrightness(new Display.Brightness(15, 15)); // 最大亮度
-            });
+            BlockDisplay blockDisplay = get__blockDisplay(playerLoc,
+                    Material.DIAMOND_BLOCK,
+                    new Vector3f(0f, .5f, 0f),
+                    new Vector3f(.5f, .5f, .5f));
 
             // 给Interaction打标签（PersistentDataContainer）
             NamespacedKey rewardKey = new NamespacedKey(Main.main, "reward_entity");
-            interaction.getPersistentDataContainer().set(rewardKey, PersistentDataType.BYTE, (byte) 1); //TODO *
+            interaction.getPersistentDataContainer().set(rewardKey, PersistentDataType.BYTE, (byte) 1); // (byte) 1 只是一个标记
 
             // 给Interaction写入要执行的命令的标签
             NamespacedKey cmdKey = new NamespacedKey(Main.main, "execute_command");
@@ -112,6 +103,14 @@ public class TestCommand implements CommandExecutor {
 
             player.sendMessage("§a奖励实体已生成！右键它领取钻石喵～");
             return true;
+        }
+
+        // ./tp_A getspecialitem
+        if (args.length == 1 && args[0].equals("getspecialitem")){
+            Player player = (Player) sender;
+
+            player.getInventory().addItem(get__item_magicWand(Main.main));
+            player.sendMessage("§6✦ 你获得了一根魔杖！");
         }
 
         // ./tp_A game A
@@ -147,6 +146,34 @@ public class TestCommand implements CommandExecutor {
             // 切换玩家页面状态
             data.scene.putIfAbsent(playerUUID, "Minecraft");
             data.scene.put(playerUUID, "gameA");
+
+            return true;
+        }
+
+        // ./tp_A game B
+        if (args.length == 2 && args[0].equals("game") && args[1].equals("B")){
+            // 初始化(获取数据核心)
+
+            // 聊天栏显示提示信息
+            sender.sendMessage("§6[TestPlugin_§4A§6] §7你进入了 §2♣生♣命♣之♣树♣ §7小游戏喵awa");
+            // 打开生命之树小游戏页面
+            Player player = (Player) sender;
+            UUID playerUUID = player.getUniqueId();
+            // 图案参数相关计算与判断
+            //-// 是否正在等待挖掘树穴
+            boolean isWaitingShovel = false;
+            if (data.gameB_shovelTimer.getOrDefault(playerUUID, 0.0) > 0) isWaitingShovel = true;
+            //-// 当前挖掘树穴的剩余时间
+            double waitingTime;
+            waitingTime = data.gameB_shovelTimer.getOrDefault(playerUUID, 0.0);
+            // 应用参数并创建容器
+            Inventory gameInv = get__inventory_gameB(data.gameB_plantStage.getOrDefault(playerUUID, "未开荒"),
+                    isWaitingShovel,
+                    waitingTime); // todo last
+            player.openInventory(gameInv);
+            // 切换玩家页面状态
+            data.scene.putIfAbsent(playerUUID, "Minecraft");
+            data.scene.put(playerUUID, "gameB");
 
             return true;
         }

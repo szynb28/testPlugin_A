@@ -3,9 +3,11 @@ package com.testPlugin_A.main.listenerLogic;
 import com.testPlugin_A.data.DataInitiator;
 import com.testPlugin_A.main.Main;
 import com.testPlugin_A.main.listenerLogic.inventoryClick.GameA_clickLogic;
+import com.testPlugin_A.main.listenerLogic.inventoryClick.GameB_clickLogic;
 import com.testPlugin_A.main.listenerLogic.inventoryClick.HelpMenu_clickLogic;
 import com.testPlugin_A.main.listenerLogic.inventoryClose.All_CloseLogic;
 import com.testPlugin_A.main.listenerLogic.timerExecuting.GameA_timerLogic;
+import com.testPlugin_A.main.listenerLogic.timerExecuting.GameB_timerLogic;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,11 +17,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -62,6 +67,7 @@ public class Listener implements org.bukkit.event.Listener {
         // 初始化容器逻辑
         HelpMenu_clickLogic helpMenuClickLogic = new HelpMenu_clickLogic(clickEvent);
         GameA_clickLogic gameAClickLogic = new GameA_clickLogic(clickEvent, data);
+        GameB_clickLogic gameBClickLogic = new GameB_clickLogic(clickEvent, data);
 
         // 根据点击的容器种类判断执行哪个容器的逻辑
         if (title.equals(HELP_MENU_TITLE)){
@@ -69,6 +75,9 @@ public class Listener implements org.bukkit.event.Listener {
         }
         else if (title.equals(GAME_A_MENU_TITLE)){
             gameAClickLogic.logic();
+        }
+        else if (title.equals(GAME_B_MENU_TITLE)){
+            gameBClickLogic.logic();
         }
 
     }
@@ -80,9 +89,12 @@ public class Listener implements org.bukkit.event.Listener {
             public void run(){
                 // 初始化容器逻辑
                 GameA_timerLogic gameATimerLogic = new GameA_timerLogic(data);
+                GameB_timerLogic gameBTimerLogic = new GameB_timerLogic(data);
 
                 // 执行所有与时间流逝逻辑相关的容器逻辑
                 gameATimerLogic.logic();
+                gameBTimerLogic.logic();
+
             }
         }.runTaskTimer(Main.main, 0L, 20L); // 20 tick = 1 秒
     }
@@ -157,7 +169,44 @@ public class Listener implements org.bukkit.event.Listener {
             }
         }
 
-        // 删除自己 TODO（领完就消失，也可以不删让它一直存在）
+        // 删除自己（领完就消失，也可以不删让它一直存在）
         clicked.remove();
+    }
+
+    // 玩家交互逻辑
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event){
+        // 只处理右键（空气或方块）
+        Action action = event.getAction();
+        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK){
+            return; // 不管左键的交互
+        }
+
+        // 获取主手物品
+        ItemStack item = event.getItem();
+        if (item == null || item.getType() == Material.AIR) return;
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+
+        // 读取物品PDC
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(Main.main, "special_item");
+
+        if (!pdc.has(key, PersistentDataType.STRING)) return; // 不是带标记的目标特殊物品
+
+        String type = pdc.get(key, PersistentDataType.STRING);
+        Player player = event.getPlayer();
+
+        // 取消默认交互（防止手持方块时右键放地上、吃东西等）
+        event.setCancelled(true);
+
+        // 更具类型执行不同操作
+        switch (type){
+            case "magic_wand" -> {
+                player.sendMessage("§d✦ 魔法发动！");
+                player.performCommand("tp_A game A");
+            }
+        }
     }
 }

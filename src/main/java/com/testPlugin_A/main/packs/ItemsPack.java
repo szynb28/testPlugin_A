@@ -2,8 +2,11 @@ package com.testPlugin_A.main.packs;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
@@ -192,6 +195,68 @@ public class ItemsPack {
                 MiniMessage.miniMessage().deserialize("<gray>[戳我购买!]</gray>")
         ));
         item.setItemMeta(itemMeta);
+        return item;
+    }
+
+    // 游戏- 生命之树
+    static public ItemStack get__item_gameBgrassBlock(){
+        ItemStack item = new ItemStack(Material.getMaterial("GRASS_BLOCK"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:green:dark_green>平旷草地</gradient>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gold>种植阶段: </gold><gray>未开荒</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameBshovel(){
+        ItemStack item = new ItemStack(Material.getMaterial("IRON_SHOVEL"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gold>铁锹</gold>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gold>用于挖掘树穴，一切的开端</gold>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我开始挖掘树穴]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameBwaitingShovel(double waitingTime){
+        ItemStack item = new ItemStack(Material.getMaterial("CLOCK"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<red>挖掘中...</red>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gray>距离完成还有: </gray><green>" + waitingTime + " </green><gray>秒</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    static public ItemStack get__item_gameBemptyBucket(){
+        ItemStack item = new ItemStack(Material.getMaterial("BUCKET"), 1);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.customName(MiniMessage.miniMessage().deserialize("<gray>空桶</gray>"));
+        itemMeta.lore(List.of(
+                MiniMessage.miniMessage().deserialize("<gold>用于给树种浇水灌溉</gold>"),
+                MiniMessage.miniMessage().deserialize(""),
+                MiniMessage.miniMessage().deserialize("<gray>[戳我前往取水]</gray>")
+        ));
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+
+    // 测试物品
+    static public ItemStack get__item_magicWand(JavaPlugin plugin){
+        ItemStack item = new ItemStack(Material.STICK);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.customName(MiniMessage.miniMessage().deserialize("<gradient:light_purple:blue>✦ 魔法棒</gradient>"));
+        meta.lore(List.of(MiniMessage.miniMessage().deserialize("<gray>右键释放魔法！</gray>")));
+
+        // 给物品打PDC标签
+        NamespacedKey key = new NamespacedKey(plugin, "special_item");
+        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "magic_wand");
+
+        item.setItemMeta(meta);
         return item;
     }
 }
