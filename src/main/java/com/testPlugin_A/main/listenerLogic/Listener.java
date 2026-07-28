@@ -9,13 +9,21 @@ import com.testPlugin_A.main.listenerLogic.timerExecuting.GameA_timerLogic;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.units.qual.N;
 
 import java.util.UUID;
 
@@ -87,5 +95,69 @@ public class Listener implements org.bukkit.event.Listener {
 
         // 执行退出容器时的逻辑
         allCloseLogic.logic();
+    }
+
+    // 玩家右键点击实体的逻辑
+    @EventHandler
+    public void onRightClickEntity(PlayerInteractEntityEvent event){
+        Player player = event.getPlayer();
+        Entity clicked = event.getRightClicked();
+
+        // 获取实体的数据容器
+        PersistentDataContainer pdc = clicked.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(Main.main, "reward_entity");
+
+        // 检查是否有我们的标签("reward_entity")
+        if (!pdc.has(key, PersistentDataType.BYTE)){ // Q:这咋判断的？ <- A:它直接判断有没有BYTE的数据形式。不是判断值
+            return;
+        }
+
+        // 取消默认交互（防止打开盔甲架装备栏(*?)）
+        event.setCancelled(true);
+
+        // 读取这个实体的命令标签
+        NamespacedKey cmdKey = new NamespacedKey(Main.main, "execute_command");
+        String command = pdc.get(cmdKey, PersistentDataType.STRING);
+
+        // 让玩家执行命令
+        if (command != null){
+            player.performCommand(command);
+        }
+
+        // 给玩家钻石
+        player.getInventory().addItem(new ItemStack(Material.DIAMOND, 1));
+        player.sendMessage("§6✦ 你获得了一颗钻石！");
+
+        // 播放粒子效果
+        player.getWorld().spawnParticle(
+                Particle.HAPPY_VILLAGER,
+                clicked.getLocation().add(0, 1, 0),
+                10, 0.3, 0.3, 0.3
+        );
+
+        // 读取挂着的盔甲架 UUID，找到并删除
+        NamespacedKey standKey = new NamespacedKey(Main.main, "linked_stand");
+        String standUuidStr = pdc.get(standKey, PersistentDataType.STRING);
+        if (standUuidStr != null){
+            UUID standUuid = UUID.fromString(standUuidStr);
+            Entity stand = Bukkit.getEntity(standUuid);
+            if (stand != null && stand.isValid()){ // Q:isValid()是啥意思？-> A:实体还活着，在世界中，可以操作
+                stand.remove(); // 删除盔甲架
+            }
+        }
+
+        // 读取挂着的展示方块实体 UUID，找到并删除
+        NamespacedKey blockDisplayKey = new NamespacedKey(Main.main, "linked_blockDisplayKey");
+        String blockDisplayUuidStr = pdc.get(blockDisplayKey, PersistentDataType.STRING);
+        if (blockDisplayUuidStr != null){
+            UUID blockDisplayUuid = UUID.fromString(blockDisplayUuidStr);
+            Entity blockDisplay = Bukkit.getEntity(blockDisplayUuid);
+            if (blockDisplay != null && blockDisplay.isValid()){
+                blockDisplay.remove(); // 删除方块展示实体
+            }
+        }
+
+        // 删除自己 TODO（领完就消失，也可以不删让它一直存在）
+        clicked.remove();
     }
 }

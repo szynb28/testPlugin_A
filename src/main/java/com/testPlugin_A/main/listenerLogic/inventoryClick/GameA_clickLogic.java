@@ -106,7 +106,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的猫猫花费
             double currentMaomaoCost = data.gameA_maomaoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_COST);
-            currentMaomaoCost *= 1.18;
+            currentMaomaoCost *= GAME_A_DEFAULT_MAOMAO_PIM;
             data.gameA_maomaoCost.put(playerUUID, toTwoDecimalPlaces(currentMaomaoCost));
             // 计算并应用购买后的猫猫数量
             int currentMaomaoAmount = data.gameA_maomaoAmount.getOrDefault(playerUUID, 0);
@@ -114,7 +114,7 @@ public class GameA_clickLogic {
             data.gameA_maomaoAmount.put(playerUUID, currentMaomaoAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 1;
+            currentCookiePerSecond += GAME_A_DEFAULT_MAOMAO_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
@@ -135,7 +135,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的猫窝花费
             double currentMaowoCost = data.gameA_maowoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOWO_COST);
-            currentMaowoCost *= 1.14;
+            currentMaowoCost *= GAME_A_DEFAULT_MAOWO_PIM;
             data.gameA_maowoCost.put(playerUUID, toTwoDecimalPlaces(currentMaowoCost));
             // 计算并应用购买后的猫窝数量
             int currentMaowoAmount = data.gameA_maowoAmount.getOrDefault(playerUUID, 0);
@@ -143,7 +143,7 @@ public class GameA_clickLogic {
             data.gameA_maowoAmount.put(playerUUID, currentMaowoAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 6;
+            currentCookiePerSecond += GAME_A_DEFAULT_MAOWO_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
@@ -164,7 +164,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的庄园花费
             double currentZhuangyuanCost = data.gameA_zhuangyuanCost.getOrDefault(playerUUID, GAME_A_DEFAULT_ZHUANGYUAN_COST);
-            currentZhuangyuanCost *= 1.11;
+            currentZhuangyuanCost *= GAME_A_DEFAULT_ZHUANGYUAN_PIM;
             data.gameA_zhuangyuanCost.put(playerUUID, toTwoDecimalPlaces(currentZhuangyuanCost));
             // 计算并应用购买后的庄园数量
             int currentZhuangyuanAmount = data.gameA_zhuangyuanAmount.getOrDefault(playerUUID, 0);
@@ -172,7 +172,7 @@ public class GameA_clickLogic {
             data.gameA_zhuangyuanAmount.put(playerUUID, currentZhuangyuanAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 35;
+            currentCookiePerSecond += GAME_A_DEFAULT_ZHUANGYUAN_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
@@ -193,7 +193,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的炉灶花费
             double currentLuzaoCost = data.gameA_luzaoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_LUZAO_COST);
-            currentLuzaoCost *= 1.09;
+            currentLuzaoCost *= GAME_A_DEFAULT_LUZAO_PIM;
             data.gameA_luzaoCost.put(playerUUID, toTwoDecimalPlaces(currentLuzaoCost));
             // 计算并应用购买后的炉灶数量
             int currentLuzaoAmount = data.gameA_luzaoAmount.getOrDefault(playerUUID, 0);
@@ -201,7 +201,7 @@ public class GameA_clickLogic {
             data.gameA_luzaoAmount.put(playerUUID, currentLuzaoAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 200;
+            currentCookiePerSecond += GAME_A_DEFAULT_LUZAO_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
@@ -222,7 +222,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的科技花费
             double currentKejiCost = data.gameA_kejiCost.getOrDefault(playerUUID, GAME_A_DEFAULT_KEJI_COST);
-            currentKejiCost *= 1.075;
+            currentKejiCost *= GAME_A_DEFAULT_KEJI_PIM;
             data.gameA_kejiCost.put(playerUUID, toTwoDecimalPlaces(currentKejiCost));
             // 计算并应用购买后的科技数量
             int currentKejiAmount = data.gameA_kejiAmount.getOrDefault(playerUUID, 0);
@@ -230,7 +230,7 @@ public class GameA_clickLogic {
             data.gameA_kejiAmount.put(playerUUID, currentKejiAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 1200;
+            currentCookiePerSecond += GAME_A_DEFAULT_KEJI_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
@@ -251,7 +251,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的工厂花费
             double currentGongchangCost = data.gameA_gongchangCost.getOrDefault(playerUUID, GAME_A_DEFAULT_GONGCHANG_COST);
-            currentGongchangCost *= 1.06;
+            currentGongchangCost *= GAME_A_DEFAULT_GONGCHANG_PIM;
             data.gameA_gongchangCost.put(playerUUID, toTwoDecimalPlaces(currentGongchangCost));
             // 计算并应用购买后的工厂数量
             int currentGongchangAmount = data.gameA_gongchangAmount.getOrDefault(playerUUID, 0);
@@ -259,7 +259,7 @@ public class GameA_clickLogic {
             data.gameA_gongchangAmount.put(playerUUID, currentGongchangAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 7000;
+            currentCookiePerSecond += GAME_A_DEFAULT_GONGCHANG_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
@@ -280,7 +280,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的符文花费
             double currentFuwenCost = data.gameA_fuwenCost.getOrDefault(playerUUID, GAME_A_DEFAULT_FUWEN_COST);
-            currentFuwenCost *= 1.05;
+            currentFuwenCost *= GAME_A_DEFAULT_FUWEN_PIM;
             data.gameA_fuwenCost.put(playerUUID, toTwoDecimalPlaces(currentFuwenCost));
             // 计算并应用购买后的符文数量
             int currentFuwenAmount = data.gameA_fuwenAmount.getOrDefault(playerUUID, 0);
@@ -288,7 +288,7 @@ public class GameA_clickLogic {
             data.gameA_fuwenAmount.put(playerUUID, currentFuwenAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 45000;
+            currentCookiePerSecond += GAME_A_DEFAULT_FUWEN_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
@@ -309,7 +309,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的水晶花费
             double currentShuijingCost = data.gameA_shuijingCost.getOrDefault(playerUUID, GAME_A_DEFAULT_SHUIJING_COST);
-            currentShuijingCost *= 1.04;
+            currentShuijingCost *= GAME_A_DEFAULT_SHUIJING_PIM;
             data.gameA_shuijingCost.put(playerUUID, toTwoDecimalPlaces(currentShuijingCost));
             // 计算并应用购买后的水晶数量
             int currentShuijingAmount = data.gameA_shuijingAmount.getOrDefault(playerUUID, 0);
@@ -317,7 +317,7 @@ public class GameA_clickLogic {
             data.gameA_shuijingAmount.put(playerUUID, currentShuijingAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 300000;
+            currentCookiePerSecond += GAME_A_DEFAULT_SHUIJING_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
@@ -338,7 +338,7 @@ public class GameA_clickLogic {
             data.gameA_cookieAmount.put(playerUUID, toTwoDecimalPlaces(currentCookieAmount));
             // 计算并应用购买后的火箭花费
             double currentHuojianCost = data.gameA_huojianCost.getOrDefault(playerUUID, GAME_A_DEFAULT_HUOJIAN_COST);
-            currentHuojianCost *= 1.03;
+            currentHuojianCost *= GAME_A_DEFAULT_HUOJIAN_PIM;
             data.gameA_huojianCost.put(playerUUID, toTwoDecimalPlaces(currentHuojianCost));
             // 计算并应用购买后的火箭数量
             int currentHuojianAmount = data.gameA_huojianAmount.getOrDefault(playerUUID, 0);
@@ -346,7 +346,7 @@ public class GameA_clickLogic {
             data.gameA_huojianAmount.put(playerUUID, currentHuojianAmount);
             // 计算并应用购买后的每秒饼干增益
             double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, GAME_A_DEFAULT_COOKIE_PER_SECOND);
-            currentCookiePerSecond += 2000000;
+            currentCookiePerSecond += GAME_A_DEFAULT_HUOJIAN_OPS;
             data.gameA_cookiePerSecond.put(playerUUID, toTwoDecimalPlaces(currentCookiePerSecond));
             // 更新GUI，刷新数字显示等内容
             updateGUI(player);
