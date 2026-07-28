@@ -47,6 +47,7 @@ public class TestCommand implements CommandExecutor {
             Player player = (Player) sender;
             UUID playerUUID = player.getUniqueId();
             Inventory gameInv = get__inventory_gameA(data.gameA_cookieAmount.getOrDefault(playerUUID, 0.00),
+                                                    data.gameA_cookiePerSecond.getOrDefault(playerUUID, 0.00),
                                                     data.gameA_maomaoAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_AMOUNT),
                                                     data.gameA_maomaoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_COST),
                                                     data.gameA_maowoAmount.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOWO_AMOUNT),

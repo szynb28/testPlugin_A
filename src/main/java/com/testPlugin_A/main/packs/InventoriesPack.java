@@ -21,6 +21,7 @@ public class InventoriesPack {
     }
     //-// 游戏菜单- 饼干点击
     static public Inventory get__inventory_gameA(double cookieAmount,
+                                                 double cookiePerSecond,
                                                  int maomaoAmount,
                                                  double maomaoCost,
                                                  int maowoAmount,
@@ -43,7 +44,7 @@ public class InventoriesPack {
         for (int i = 0; i <= 53; i++){
             inv.setItem(i, get__item_blackBackGround());
         }
-        inv.setItem(22, get__item_gameAcookie(cookieAmount));
+        inv.setItem(22, get__item_gameAcookie(cookieAmount, cookiePerSecond));
         inv.setItem(36, get__item_gameAmaomao(maomaoAmount, maomaoCost));
         inv.setItem(37, get__item_gameAmaowo(maowoAmount, maowoCost));
         inv.setItem(38, get__item_gameAzhuangyuan(zhuangyuanAmount, zhuangyuanCost));

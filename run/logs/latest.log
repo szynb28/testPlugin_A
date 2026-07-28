@@ -1,9 +1,9 @@
-[20:37:24] [ServerMain/INFO]: [bootstrap] Running Java 21 (OpenJDK 64-Bit Server VM 21.0.11+10-LTS; Microsoft Microsoft-13877171) on Windows 11 10.0 (amd64)
-[20:37:24] [ServerMain/INFO]: [bootstrap] Loading Paper 1.21.11-132-ver/1.21.11@c5eb079 (2026-05-11T11:43:09Z) for Minecraft 1.21.11
-[20:37:25] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
-[20:37:25] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Remapping plugin 'D:\for java\for MinecraftPlugins\testPlugin_A\build\libs\testPlugin_A-1.0.jar'...
-[20:37:26] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Done remapping plugin 'D:\for java\for MinecraftPlugins\testPlugin_A\build\libs\testPlugin_A-1.0.jar' in 263ms.
-[20:37:26] [ServerMain/INFO]: [PluginInitializerManager] Initialized 1 plugin
-[20:37:26] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (1):
+[07:54:15] [ServerMain/INFO]: [bootstrap] Running Java 21 (OpenJDK 64-Bit Server VM 21.0.11+10-LTS; Microsoft Microsoft-13877171) on Windows 11 10.0 (amd64)
+[07:54:15] [ServerMain/INFO]: [bootstrap] Loading Paper 1.21.11-132-ver/1.21.11@c5eb079 (2026-05-11T11:43:09Z) for Minecraft 1.21.11
+[07:54:16] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
+[07:54:16] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Remapping plugin 'D:\for java\for MinecraftPlugins\testPlugin_A\build\libs\testPlugin_A-1.0.jar'...
+[07:54:16] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Done remapping plugin 'D:\for java\for MinecraftPlugins\testPlugin_A\build\libs\testPlugin_A-1.0.jar' in 334ms.
+[07:54:17] [ServerMain/INFO]: [PluginInitializerManager] Initialized 1 plugin
+[07:54:17] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (1):
  - testPlugin_A (1.0.0)
-[20:37:29] [ServerMain/INFO]: You need to agree to the EULA in order to run the server. Go to eula.txt for more info.
+[07:54:20] [ServerMain/INFO]: You need to agree to the EULA in order to run the server. Go to eula.txt for more info.

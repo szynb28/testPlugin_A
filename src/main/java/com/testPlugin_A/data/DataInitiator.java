@@ -30,6 +30,8 @@ public class DataInitiator {
     public HashMap<UUID, Integer> gameA_huojianAmount; // 玩家持有的猫猫数量
     public HashMap<UUID, Double> gameA_huojianCost; // 玩家购买猫猫的费用
 
+    // 存储器引用
+    public DataStorage storage;
 
     public DataInitiator(){
         // 初始化 全局内容

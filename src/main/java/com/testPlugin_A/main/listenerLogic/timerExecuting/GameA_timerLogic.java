@@ -56,6 +56,7 @@ public class GameA_timerLogic {
         Inventory inv = view.getTopInventory();
         // 更新容器内物品与显示内容
         double currentCookieAmount = data.gameA_cookieAmount.getOrDefault(playerUUID, 0.00);
+        double currentCookiePerSecond = data.gameA_cookiePerSecond.getOrDefault(playerUUID, 0.00);
         int currentMaomaoAmount = data.gameA_maomaoAmount.getOrDefault(playerUUID, 0);
         double currentMaomaoCost = data.gameA_maomaoCost.getOrDefault(playerUUID, GAME_A_DEFAULT_MAOMAO_COST);
         int currentMaowoAmount = data.gameA_maowoAmount.getOrDefault(playerUUID, 0);
@@ -74,7 +75,7 @@ public class GameA_timerLogic {
         double currentShuijingCost = data.gameA_shuijingCost.getOrDefault(playerUUID, GAME_A_DEFAULT_SHUIJING_COST);
         int currentHuojianAmount = data.gameA_huojianAmount.getOrDefault(playerUUID, 0);
         double currentHuojianCost = data.gameA_huojianCost.getOrDefault(playerUUID, GAME_A_DEFAULT_HUOJIAN_COST);
-        inv.setItem(22, get__item_gameAcookie(currentCookieAmount));
+        inv.setItem(22, get__item_gameAcookie(currentCookieAmount, currentCookiePerSecond));
         inv.setItem(36, get__item_gameAmaomao(currentMaomaoAmount, currentMaomaoCost));
         inv.setItem(37, get__item_gameAmaowo(currentMaowoAmount, currentMaowoCost));
         inv.setItem(38, get__item_gameAzhuangyuan(currentZhuangyuanAmount, currentZhuangyuanCost));

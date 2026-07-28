@@ -32,7 +32,7 @@ public class ItemsPack {
     }
 
     // 游戏- 饼干点击
-    static public ItemStack get__item_gameAcookie(double cookieAmount){
+    static public ItemStack get__item_gameAcookie(double cookieAmount, double cookiePerSecond){
         ItemStack item = new ItemStack(Material.getMaterial("COOKIE"), 1);
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.customName(MiniMessage.miniMessage().deserialize("<gradient:yellow:gold>曲奇酱~</gradient>"));
@@ -40,7 +40,8 @@ public class ItemsPack {
                 MiniMessage.miniMessage().deserialize("<gray>无辜的曲奇酱，要天天被鼠标酱戳...</gray>"),
                 MiniMessage.miniMessage().deserialize("<gray>[戳我获取曲奇qwq]</gray>"),
                 MiniMessage.miniMessage().deserialize(""),
-                MiniMessage.miniMessage().deserialize("<gradient:yellow:gold>当前曲奇数量: " + cookieAmount + " 喵!~</gradient>")
+                MiniMessage.miniMessage().deserialize("<gradient:yellow:gold>当前曲奇数量: " + cookieAmount + " 喵!~</gradient>"),
+                MiniMessage.miniMessage().deserialize("<gradient:green:dark_green>当前每秒曲奇增益: " + cookiePerSecond + " 喵!~</gradient>")
         ));
         item.setItemMeta(itemMeta);
         return item;
