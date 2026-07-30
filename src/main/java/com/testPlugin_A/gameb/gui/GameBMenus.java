@@ -40,6 +40,7 @@ public class GameBMenus {
     public GameBMenus(JavaPlugin plugin, GameBService service) {
         this.plugin = plugin;
         this.service = service;
+        // 所有按钮用 PDC 保存动作和目标，而不是依赖物品材质或显示名称判断点击。
         this.actionKey = new NamespacedKey(plugin, "gameb_action");
         this.targetKey = new NamespacedKey(plugin, "gameb_target");
         this.farmKey = new NamespacedKey(plugin, "gameb_farm");
@@ -74,6 +75,7 @@ public class GameBMenus {
 
     public void refreshMain(Player player) {
         if (player.getOpenInventory().getTitle().equals(MAIN_TITLE)) {
+            // 只刷新生命之树主菜单，绝不能向工作台、箱子等原版容器写入槽位。
             renderMain(player.getOpenInventory().getTopInventory(), service.profile(player.getUniqueId(), player.getName()));
         }
     }

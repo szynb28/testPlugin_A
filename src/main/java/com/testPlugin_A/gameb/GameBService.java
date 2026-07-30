@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * 生命之树的核心业务层。
+ * 所有会改变农场进度、金币、库存的操作都集中在这里，GUI 只负责调用本类。
+ */
 public class GameBService {
     public enum Result { OK, INVALID_STAGE, NOT_UNLOCKED, NOT_ENOUGH_COINS, NOT_ENOUGH_FERTILIZER, NOT_MATURE, COOLDOWN, SELF_TARGET }
 
@@ -20,6 +24,7 @@ public class GameBService {
     public GameBProfile profile(UUID playerId, String playerName) {
         GameBProfile profile = repository.profile(playerId);
         profile.setLastKnownName(playerName);
+        // 玩家每次打开菜单或登录都会补算离线期间已完成的任务。
         reconcile(profile, System.currentTimeMillis());
         return profile;
     }
@@ -35,6 +40,7 @@ public class GameBService {
         for (FarmType farm : FarmType.values()) {
             if (!profile.hasFarm(farm)) continue;
             PlotState plot = profile.plot(farm);
+            // while 而非 if：服务器关闭很久时，施肥和生长可能已经连续完成。
             while (isTimed(plot.getStage()) && now >= plot.getFinishAt()) {
                 long completedAt = plot.getFinishAt();
                 switch (plot.getStage()) {
@@ -42,6 +48,7 @@ public class GameBService {
                     case PLANTING -> ready(plot, PlotStage.READY_TO_WATER);
                     case WATERING -> ready(plot, PlotStage.READY_TO_CULTIVATE);
                     case CULTIVATING -> ready(plot, PlotStage.READY_TO_GROW);
+                    // 生长从“施肥原本应完成的时间”开始，避免离线时间被白白吞掉。
                     case FERTILIZING -> beginGrowth(plot, completedAt, FertilizerTier.fromId(plot.getFertilizerId()));
                     case GROWING -> ready(plot, PlotStage.MATURE);
                     default -> { return; }
@@ -54,6 +61,7 @@ public class GameBService {
         reconcile(profile, now);
         if (!profile.hasFarm(farm)) return Result.NOT_UNLOCKED;
         PlotState plot = profile.plot(farm);
+        // 每个操作只能在指定阶段开始，保证挖坑、栽种、浇灌的顺序不可跳过。
         PlotStage expected = switch (action) {
             case DIG -> PlotStage.WILDERNESS;
             case PLANT -> PlotStage.READY_TO_PLANT;
@@ -81,6 +89,7 @@ public class GameBService {
         plot.setFertilizerId(fertilizer.id());
         if (fertilizer == FertilizerTier.NONE) beginGrowth(plot, now, fertilizer);
         else {
+            // 肥料在开始施肥时扣除，服务器重启后不会重复消耗。
             profile.getFertilizers().put(fertilizer.id(), profile.fertilizerCount(fertilizer) - 1);
             plot.setStage(PlotStage.FERTILIZING);
             plot.setFinishAt(now + config.fertilizingDuration());
@@ -128,6 +137,7 @@ public class GameBService {
                 profile.getWarehouse().remove(farm.id());
             }
         }
+        // 排行榜按累计收入计算，购买农场和肥料不会降低玩家名次。
         profile.setCoins(profile.getCoins() + income);
         profile.setTotalEarned(profile.getTotalEarned() + income);
         return income;
@@ -140,6 +150,7 @@ public class GameBService {
         reconcile(owner, now);
         if (owner.getStealCooldownUntil() > now) return Result.COOLDOWN;
         if (owner.plot(farm).getStage() != PlotStage.MATURE) return Result.NOT_MATURE;
+        // 偷取只奖励访客，不扣减主人的成熟作物；冷却记录保存在主人档案中。
         int amount = Math.max(1, (int) Math.floor(config.yield(farm) * config.stealYieldRatio()));
         addCrop(thief, farm, amount);
         owner.setStealCooldownUntil(now + config.stealCooldownMs());
@@ -175,6 +186,7 @@ public class GameBService {
 
     private void beginGrowth(PlotState plot, long startAt, FertilizerTier fertilizer) {
         plot.setStage(PlotStage.GROWING);
+        // 肥料通过缩短生长结束时间生效，原始时长仍由 config.yml 控制。
         plot.setFinishAt(startAt + Math.max(1, Math.round(config.growthDuration() * config.growthMultiplier(fertilizer))));
     }
 

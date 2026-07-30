@@ -13,6 +13,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 游戏 B 的独立存档。
+ * 不与游戏 A 共用数据文件，避免扩展农场功能时影响已有的曲奇数据。
+ */
 public class GameBStorage {
     private final JavaPlugin plugin;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -42,6 +46,7 @@ public class GameBStorage {
                 gson.toJson(new SaveData(repository.snapshot()), writer);
             }
             try {
+                // 先写临时文件再替换，尽量避免断电时把正式存档写成半截。
                 Files.move(temporary, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
             } catch (java.nio.file.AtomicMoveNotSupportedException ignored) {
                 Files.move(temporary, file, StandardCopyOption.REPLACE_EXISTING);
