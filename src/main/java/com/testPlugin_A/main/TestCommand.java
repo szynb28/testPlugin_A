@@ -123,8 +123,10 @@ public class TestCommand implements CommandExecutor {
 
             Location loc = player.getLocation();
 
-            // 生成隐形可移动座位
-            ArmorStand seat = player.getWorld().spawn(loc, ArmorStand.class, stand -> {
+            // ✦✦✦ 加入第一个载具 ========================================================================================
+
+            // 生成隐形可移动座位 1
+            ArmorStand seat_1 = player.getWorld().spawn(loc, ArmorStand.class, stand -> {
                 stand.setVisible(false);       // 隐形
                 stand.setGravity(false);       // 不掉下去
                 // stand.setMarker(true);      可移动载具用marker不稳定！这行先注释掉
@@ -134,18 +136,18 @@ public class TestCommand implements CommandExecutor {
                 stand.setRemoveWhenFarAway(false); // 不会因为跑远了被刷掉
 
                 // 打标签，方便识别是“座位”
-                NamespacedKey key = new NamespacedKey(Main.main, "seat_entity");
+                NamespacedKey key = new NamespacedKey(Main.main, "seat_entity_1");
                 stand.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
             });
 
-            // 设置方块展示实体
-            BlockDisplay blockDisplay = get__blockDisplay(loc,
+            // 设置方块展示实体 1
+            BlockDisplay blockDisplay_1 = get__blockDisplay(loc,
                     Material.DIAMOND_BLOCK,
                     new Vector3f(0f, 0f, 0f), // 生成的方块展示实体保持中央和玩家对齐
                     new Vector3f(1f, 1f, 1f));
 
-            // ✦ 新增：把方块的视觉中心拉回实体位置！
-            blockDisplay.setTransformation(new org.bukkit.util.Transformation(
+            // 把方块的视觉中心拉回实体位置！
+            blockDisplay_1.setTransformation(new org.bukkit.util.Transformation(
                     new org.joml.Vector3f(-.5f, 0f, -.5f), // ← 关键！把中心往回拉(y可能也偏了，不过偏的刚刚好啊，正好看起来就像玩家坐在上面一样)
                     new org.joml.Quaternionf(0, 0, 0, 1),
                     new org.joml.Vector3f(1f, 1f, 1f),
@@ -153,12 +155,61 @@ public class TestCommand implements CommandExecutor {
             ));
 
             // 把展示方块实体的 UUID 存到 盔甲架 的 PDC 里（*group ID）
-            NamespacedKey blockDisplayKey = new NamespacedKey(Main.main, "linked_blockDisplay");
-            seat.getPersistentDataContainer().set(blockDisplayKey, PersistentDataType.STRING, blockDisplay.getUniqueId().toString());
+            NamespacedKey blockDisplay_1_Key = new NamespacedKey(Main.main, "linked_blockDisplay_1");
+            seat_1.getPersistentDataContainer().set(blockDisplay_1_Key, PersistentDataType.STRING, blockDisplay_1.getUniqueId().toString());
 
-            // 玩家骑上去盔甲架
-            seat.addPassenger(player);
+            //=- 玩家骑上去盔甲架
+            seat_1.addPassenger(player);
             player.sendMessage("§a已坐下～ 按Shift站起来喵");
+
+            // ✦✦✦ 加入第二个载具 ========================================================================================
+
+            // 生成隐形可移动座位 2
+
+            //-// 设置新座位的偏移
+            Location loc_2 = loc.clone();
+            loc_2.set(loc.getX(), loc.getY(), loc.getZ() - 3);
+
+            ArmorStand seat_2 = player.getWorld().spawn(loc_2, ArmorStand.class, stand -> {
+                stand.setVisible(false);       // 隐形
+                stand.setGravity(false);       // 不掉下去
+                // stand.setMarker(true);      可移动载具用marker不稳定！这行先注释掉
+                stand.setSmall(true);          // 小尺寸
+                stand.setInvulnerable(true);   // 无敌
+                stand.setCustomNameVisible(false);
+                stand.setRemoveWhenFarAway(false); // 不会因为跑远了被刷掉
+
+                // 打标签，方便识别是“座位”
+                NamespacedKey key = new NamespacedKey(Main.main, "seat_entity_2");
+                stand.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
+            });
+
+            // 生成完seat_2后，在seat_1里存seat_2的关联标签(UUID)
+            NamespacedKey linkedSeat2Key = new NamespacedKey(Main.main, "linked_seat_2");
+            seat_1.getPersistentDataContainer().set(
+                    linkedSeat2Key,
+                    PersistentDataType.STRING,
+                    seat_2.getUniqueId().toString()
+            );
+
+            // 设置方块展示实体 2
+            BlockDisplay blockDisplay_2 = get__blockDisplay(loc_2,
+                    Material.DIAMOND_BLOCK,
+                    new Vector3f(0f, 0f, 0f),
+                    new Vector3f(1f, 1f, 1f));
+
+            // 把方块的视觉中心拉回实体位置！
+            blockDisplay_2.setTransformation(new org.bukkit.util.Transformation(
+                    new org.joml.Vector3f(-.5f, 0f, -.5f), // ← 关键！把中心往回拉(y可能也偏了，不过偏的刚刚好啊，正好看起来就像玩家坐在上面一样)
+                    new org.joml.Quaternionf(0, 0, 0, 1),
+                    new org.joml.Vector3f(1f, 1f, 1f),
+                    new org.joml.Quaternionf(0, 0, 0, 1)
+            ));
+
+            // 把展示方块实体的 UUID 存到 盔甲架 的 PDC 里（*group ID）
+            NamespacedKey blockDisplay_2_Key = new NamespacedKey(Main.main, "linked_blockDisplay_2");
+            seat_2.getPersistentDataContainer().set(blockDisplay_2_Key, PersistentDataType.STRING, blockDisplay_2.getUniqueId().toString());
+
             return true;
         }
 

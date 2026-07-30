@@ -42,7 +42,7 @@ public class VehicleDriveListener extends PacketListenerAbstract {
 
         // 检查是不是我们的座位
         //-// 以"seat_entity"为标签的key
-        NamespacedKey key = new NamespacedKey(Main.main, "seat_entity");
+        NamespacedKey key = new NamespacedKey(Main.main, "seat_entity_1");
         //-// 如果这个载具以key为标签的pdc没有BYTE类型的话（玩家载具盔甲架的"seat_entity"标签有个(byte) 1标记），则不处理逻辑
         if (!stand.getPersistentDataContainer().has(key, PersistentDataType.BYTE)) return;
 
