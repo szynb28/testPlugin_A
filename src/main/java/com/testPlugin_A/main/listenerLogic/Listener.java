@@ -1,6 +1,8 @@
 package com.testPlugin_A.main.listenerLogic;
 
 import com.testPlugin_A.data.DataInitiator;
+import com.testPlugin_A.gameb.GameBService;
+import com.testPlugin_A.gameb.gui.GameBMenus;
 import com.testPlugin_A.main.Main;
 import com.testPlugin_A.main.listenerLogic.inventoryClick.GameA_clickLogic;
 import com.testPlugin_A.main.listenerLogic.inventoryClick.GameB_clickLogic;
@@ -28,7 +30,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.checkerframework.checker.units.qual.N;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -40,9 +41,13 @@ import static com.testPlugin_A.main.packs.InteractorPack.*;
 public class Listener implements org.bukkit.event.Listener {
 
     private final DataInitiator data;
+    private final GameBService gameBService;
+    private final GameBMenus gameBMenus;
 
-    public Listener(DataInitiator data){
+    public Listener(DataInitiator data, GameBService gameBService, GameBMenus gameBMenus){
         this.data = data;
+        this.gameBService = gameBService;
+        this.gameBMenus = gameBMenus;
     }
 
     // 玩家进入游戏执行的逻辑
@@ -54,6 +59,8 @@ public class Listener implements org.bukkit.event.Listener {
         String msg = Main.main.getConfig().getString("Msgs.JoinMessage");
         String replaced = msg.replace("%player%", playerName);
         joinEvent.joinMessage(MiniMessage.miniMessage().deserialize(replaced));
+        data.scene.putIfAbsent(player.getUniqueId(), DEFAULT_SCENE);
+        gameBService.profile(player.getUniqueId(), playerName);
     }
 
     // 容器点击操作时执行的逻辑
@@ -69,7 +76,7 @@ public class Listener implements org.bukkit.event.Listener {
         // 初始化容器逻辑
         HelpMenu_clickLogic helpMenuClickLogic = new HelpMenu_clickLogic(clickEvent);
         GameA_clickLogic gameAClickLogic = new GameA_clickLogic(clickEvent, data);
-        GameB_clickLogic gameBClickLogic = new GameB_clickLogic(clickEvent, data);
+        GameB_clickLogic gameBClickLogic = new GameB_clickLogic(clickEvent, gameBService, gameBMenus);
 
         // 根据点击的容器种类判断执行哪个容器的逻辑
         if (title.equals(HELP_MENU_TITLE)){
@@ -78,7 +85,7 @@ public class Listener implements org.bukkit.event.Listener {
         else if (title.equals(GAME_A_MENU_TITLE)){
             gameAClickLogic.logic();
         }
-        else if (title.equals(GAME_B_MENU_TITLE)){
+        else if (gameBMenus.isGameBMenu(title)){
             gameBClickLogic.logic();
         }
 
@@ -91,7 +98,7 @@ public class Listener implements org.bukkit.event.Listener {
             public void run(){
                 // 初始化容器逻辑
                 GameA_timerLogic gameATimerLogic = new GameA_timerLogic(data);
-                GameB_timerLogic gameBTimerLogic = new GameB_timerLogic(data);
+                GameB_timerLogic gameBTimerLogic = new GameB_timerLogic(gameBService, gameBMenus);
 
                 // 执行所有与时间流逝逻辑相关的容器逻辑
                 gameATimerLogic.logic();
@@ -430,17 +437,19 @@ public class Listener implements org.bukkit.event.Listener {
 
         if (vehicle_2 == null || !vehicle_2.isValid()){
             System.out.println("seat_2 丢失或无效！");
+            return;
         }
 
         // 检查是不是我们的座位
         NamespacedKey key_2 = new NamespacedKey(Main.main, "seat_entity_2");
         if (!vehicle_2.getPersistentDataContainer().has(key_2, PersistentDataType.BYTE)) return;
+        Entity secondVehicle = vehicle_2;
 
         // 延迟 1 tick 删除，避免事件期间删实体出问题
         Bukkit.getScheduler().runTask(Main.main, () -> {
 
             // 获取实体的数据容器
-            PersistentDataContainer pdc = vehicle_2.getPersistentDataContainer();
+            PersistentDataContainer pdc = secondVehicle.getPersistentDataContainer();
 
             // 读取挂着的展示方块实体 UUID，找到并删除
             NamespacedKey blockDisplayKey = new NamespacedKey(Main.main, "linked_blockDisplay_2");
@@ -453,7 +462,7 @@ public class Listener implements org.bukkit.event.Listener {
                 }
             }
 
-            if (vehicle_2.isValid()) vehicle_2.remove();
+            if (secondVehicle.isValid()) secondVehicle.remove();
         });
     }
 

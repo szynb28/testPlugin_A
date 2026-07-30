@@ -57,6 +57,4 @@ public class ConstantPack {
     static public final double GAME_A_DEFAULT_HUOJIAN_OPS = 2000000; // 默认每个火箭每秒产出饼干量(Output per second)
     static public final double GAME_A_DEFAULT_HUOJIAN_PIM = 1.03; // 默认购买火箭后涨价倍率(Price increase multiple)
 
-    // 生命之树
-    static public final String GAME_B_MENU_TITLE = "§2§l◀§a生命之树§2▶ §r§d喵~"; // 生命之树菜单的标题
 }

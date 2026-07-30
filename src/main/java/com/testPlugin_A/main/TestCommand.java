@@ -1,6 +1,8 @@
 package com.testPlugin_A.main;
 
 import com.testPlugin_A.data.DataInitiator;
+import com.testPlugin_A.gameb.GameBService;
+import com.testPlugin_A.gameb.gui.GameBMenus;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,7 +14,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Transformation;
-import org.checkerframework.checker.units.qual.N;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -28,9 +29,11 @@ import static com.testPlugin_A.main.packs.EntitiesPack.*;
 public class TestCommand implements CommandExecutor {
 
     private final DataInitiator data;
+    private final GameBMenus gameBMenus;
 
-    public TestCommand(DataInitiator data){
+    public TestCommand(DataInitiator data, GameBService gameBService, GameBMenus gameBMenus){
         this.data = data;
+        this.gameBMenus = gameBMenus;
     }
 
     @Override
@@ -252,28 +255,13 @@ public class TestCommand implements CommandExecutor {
 
         // ./tp_A game B
         if (args.length == 2 && args[0].equals("game") && args[1].equals("B")){
-            // 初始化(获取数据核心)
-
-            // 聊天栏显示提示信息
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("只有玩家能打开生命之树菜单。");
+                return true;
+            }
             sender.sendMessage("§6[TestPlugin_§4A§6] §7你进入了 §2♣生♣命♣之♣树♣ §7小游戏喵awa");
-            // 打开生命之树小游戏页面
-            Player player = (Player) sender;
-            UUID playerUUID = player.getUniqueId();
-            // 图案参数相关计算与判断
-            //-// 是否正在等待挖掘树穴
-            boolean isWaitingShovel = false;
-            if (data.gameB_shovelTimer.getOrDefault(playerUUID, 0.0) > 0) isWaitingShovel = true;
-            //-// 当前挖掘树穴的剩余时间
-            double waitingTime;
-            waitingTime = data.gameB_shovelTimer.getOrDefault(playerUUID, 0.0);
-            // 应用参数并创建容器
-            Inventory gameInv = get__inventory_gameB(data.gameB_plantStage.getOrDefault(playerUUID, "未开荒"),
-                    isWaitingShovel,
-                    waitingTime); // todo last
-            player.openInventory(gameInv);
-            // 切换玩家页面状态
-            data.scene.putIfAbsent(playerUUID, "Minecraft");
-            data.scene.put(playerUUID, "gameB");
+            gameBMenus.openMain(player);
+            data.scene.put(player.getUniqueId(), "gameB");
 
             return true;
         }

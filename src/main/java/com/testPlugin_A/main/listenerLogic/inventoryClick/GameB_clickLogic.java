@@ -1,84 +1,94 @@
 package com.testPlugin_A.main.listenerLogic.inventoryClick;
 
-import com.testPlugin_A.data.DataInitiator;
-import org.bukkit.Material;
+import com.testPlugin_A.gameb.FarmAction;
+import com.testPlugin_A.gameb.FarmType;
+import com.testPlugin_A.gameb.FertilizerTier;
+import com.testPlugin_A.gameb.GameBProfile;
+import com.testPlugin_A.gameb.GameBService;
+import com.testPlugin_A.gameb.gui.GameBMenus;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.UUID;
 
-import static com.testPlugin_A.main.packs.ItemsPack.*;
-
 public class GameB_clickLogic {
-    InventoryClickEvent clickEvent; // 所附属的点击事件
-    DataInitiator data; // 所附属的数据核心
+    private final InventoryClickEvent clickEvent;
+    private final GameBService service;
+    private final GameBMenus menus;
 
-    public GameB_clickLogic(InventoryClickEvent clickEvent, DataInitiator data){
+    public GameB_clickLogic(InventoryClickEvent clickEvent, GameBService service, GameBMenus menus) {
         this.clickEvent = clickEvent;
-        this.data = data;
+        this.service = service;
+        this.menus = menus;
     }
 
-    // 饼干点击游戏- 点击主逻辑
     public void logic() {
-        // 取消点击(防止拿出物品)
         clickEvent.setCancelled(true);
-
+        ItemStack clicked = clickEvent.getCurrentItem();
+        if (clicked == null) return;
+        String action = menus.action(clicked);
+        if (action == null) return;
         Player player = (Player) clickEvent.getWhoClicked();
-        ItemStack clickedItem = clickEvent.getCurrentItem();
-        if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
+        GameBProfile profile = service.profile(player.getUniqueId(), player.getName());
+        FarmType activeFarm = FarmType.fromId(profile.getActiveFarmId());
+        long now = System.currentTimeMillis();
 
-        // 判断点击挖掘树穴按钮
-        /*
-        点击挖掘树穴按钮后，该槽位会变成等待按钮，此时无法触发这个
-        当倒计时结束后，updateGUI逻辑方法中会自动将该槽位物品换成铁锹，所以不用再去判断是否倒计时结束再换成铁锹
-         */
-        if (clickedItem.getType() == Material.IRON_SHOVEL){
-            UUID playerUUID = player.getUniqueId();
-            // 更新挖掘树穴倒计时逻辑
-            updateShovelTimer(player);
-            // 更新GUI，刷新数字显示等内容
-            updateGUI(player);
+        switch (action) {
+            case "dig" -> apply(player, service.startAction(profile, activeFarm, FarmAction.DIG, now), "开始挖掘树穴。", true);
+            case "plant" -> apply(player, service.startAction(profile, activeFarm, FarmAction.PLANT, now), "开始栽种。", true);
+            case "water" -> apply(player, service.startAction(profile, activeFarm, FarmAction.WATER, now), "开始浇灌。", true);
+            case "cultivate" -> apply(player, service.startAction(profile, activeFarm, FarmAction.CULTIVATE, now), "开始栽培。", true);
+            case "fertilizer" -> menus.openFertilizer(player);
+            case "harvest" -> apply(player, service.harvest(profile, activeFarm, now), "收获已放入仓库。", true);
+            case "farms" -> menus.openFarmMenu(player);
+            case "warehouse" -> menus.openWarehouse(player);
+            case "shop" -> menus.openShop(player);
+            case "rank" -> menus.openLeaderboard(player);
+            case "visitors" -> menus.openVisitors(player);
+            case "main" -> menus.openMain(player);
+            case "close" -> player.closeInventory();
+            case "farm" -> apply(player, service.unlockOrSelect(profile, menus.farm(clicked)), "农场已切换。", true);
+            case "sell" -> {
+                long income = service.sellAll(profile);
+                player.sendMessage(income > 0 ? "§6出售完成，获得 " + income + " 金币。" : "§7仓库中没有可出售的作物。");
+                menus.openWarehouse(player);
+            }
+            case "visit" -> {
+                UUID target = menus.target(clicked);
+                if (target != null) menus.openVisit(player, target, menus.farm(clicked));
+            }
+            case "steal" -> {
+                UUID target = menus.target(clicked);
+                if (target != null) apply(player, service.steal(profile, player.getUniqueId(), target, menus.farm(clicked), now), "偷取成功，作物已放入仓库。", false);
+            }
+            default -> {
+                if (action.startsWith("buy:")) {
+                    apply(player, service.buyFertilizer(profile, FertilizerTier.fromId(action.substring(4))), "购买成功。", false);
+                    menus.openShop(player);
+                } else if (action.startsWith("grow:")) {
+                    apply(player, service.startGrowing(profile, activeFarm, FertilizerTier.fromId(action.substring(5)), now), "作物开始生长。", true);
+                }
+            }
         }
     }
-    // 更新挖掘树穴倒计时逻辑
-    public void updateShovelTimer(Player player){
-        UUID playerUUID = player.getUniqueId();
-        data.gameB_shovelTimer.put(playerUUID, 10.00); // todo 挖掘时间的逻辑要迭代下
-    }
-    // 更新菜单
-    public void updateGUI(Player player){
-        UUID playerUUID = player.getUniqueId();
-        // 获取玩家当前打开的界面与容器
-        InventoryView view = player.getOpenInventory();
-        Inventory inv = view.getTopInventory();
-        // 图案参数相关计算与判断
-        //-// 当前的种植阶段
-        String plantStage = data.gameB_plantStage.getOrDefault(playerUUID, "未开荒");
-        //-// 是否正在等待挖掘树穴
-        boolean isWaitingShovel = false;
-        if (data.gameB_shovelTimer.getOrDefault(playerUUID, 0.0) > 0) isWaitingShovel = true;
-        //-// 当前挖掘树穴的剩余时间
-        double waitingTime;
-        waitingTime = data.gameB_shovelTimer.getOrDefault(playerUUID, 0.0);
-        // 生命之树图案
-        if (plantStage.equals("未开荒")){
-            inv.setItem(22, get__item_gameBgrassBlock());
+
+    private void apply(Player player, GameBService.Result result, String success, boolean openMain) {
+        if (result == GameBService.Result.OK) {
+            player.sendMessage("§a" + success);
+            if (openMain) menus.openMain(player);
+            return;
         }
-        // 挖掘树穴图案
-        if (isWaitingShovel) inv.setItem(37, get__item_gameBwaitingShovel(waitingTime));
-        else inv.setItem(37, get__item_gameBshovel());
-    }
-    // 数值保留两位小数的方法
-    public double toTwoDecimalPlaces(double value){
-        // 保留两位小数
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(2, RoundingMode.HALF_UP);
-        double result = bd.doubleValue();
-        return result;
+        String message = switch (result) {
+            case INVALID_STAGE -> "当前阶段不能进行这个操作。";
+            case NOT_UNLOCKED -> "该农场尚未解锁。";
+            case NOT_ENOUGH_COINS -> "金币不足。";
+            case NOT_ENOUGH_FERTILIZER -> "没有足够的这种肥料。";
+            case NOT_MATURE -> "作物尚未成熟。";
+            case COOLDOWN -> "这个玩家的农场刚被偷过，请稍后再来。";
+            case SELF_TARGET -> "不能偷取自己的农场。";
+            case OK -> success;
+        };
+        player.sendMessage("§c" + message);
     }
 }

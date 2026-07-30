@@ -1,2 +1,38 @@
 Msgs:
   JoinMessage: "<light_purple>欢迎 <gold>%player%</gold> 酱加入服务器qwq</light_purple>"
+
+# 生命之树小游戏。所有时长以秒为单位，重启和离线期间仍按真实时间结算。
+game-b:
+  durations:
+    dig-seconds: 60
+    plant-seconds: 60
+    water-seconds: 60
+    cultivate-seconds: 60
+    fertilizing-seconds: 60
+    growing-seconds: 1200
+  farms:
+    life-tree:
+      unlock-cost: 0
+      yield: 5
+      sell-price: 20
+    orchard:
+      unlock-cost: 500
+      yield: 8
+      sell-price: 35
+    herb-garden:
+      unlock-cost: 2000
+      yield: 12
+      sell-price: 60
+  fertilizers:
+    basic:
+      price: 80
+      growth-multiplier: 0.85
+    advanced:
+      price: 220
+      growth-multiplier: 0.65
+    master:
+      price: 500
+      growth-multiplier: 0.45
+  stealing:
+    cooldown-seconds: 43200
+    yield-ratio: 0.20

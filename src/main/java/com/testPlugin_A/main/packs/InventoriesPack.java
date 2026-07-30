@@ -57,20 +57,4 @@ public class InventoriesPack {
         return inv;
     }
 
-    // 游戏菜单- 生命之树
-    static public Inventory get__inventory_gameB(String plantStage, boolean isShovelWaiting, double waitingTime){
-        Inventory inv = Bukkit.createInventory(null, 54, GAME_B_MENU_TITLE);
-        for (int i = 0; i <= 53; i++){
-            inv.setItem(i, get__item_blackBackGround());
-        }
-        // 生命之树图案
-        if (plantStage.equals("未开荒")){
-            inv.setItem(22, get__item_gameBgrassBlock());
-        }
-        // 挖掘树穴图案
-        if (isShovelWaiting) inv.setItem(37, get__item_gameBwaitingShovel(waitingTime));
-        else inv.setItem(37, get__item_gameBshovel()); // todo last
-
-        return inv;
-    }
 }

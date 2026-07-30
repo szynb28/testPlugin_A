@@ -42,7 +42,7 @@ public class GameA_timerLogic {
                 data.gameA_cookieAmount.put(playerUUID, result);
             }
             // 只有在当前玩家页面场景在gameA(饼干点击)的时候更新GUI，刷新数字显示等内容。优化性能
-            if (data.scene.get(playerUUID).equals("gameA")){
+            if ("gameA".equals(data.scene.get(playerUUID))){
                 updateGUI(player);
             }
         }

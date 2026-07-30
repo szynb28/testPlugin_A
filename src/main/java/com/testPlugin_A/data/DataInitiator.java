@@ -32,11 +32,6 @@ public class DataInitiator {
     public HashMap<UUID, Integer> gameA_huojianAmount; // 玩家持有的猫猫数量
     public HashMap<UUID, Double> gameA_huojianCost; // 玩家购买猫猫的费用
 
-    // gameB- 生命之树
-    public HashMap<UUID, String> gameB_plantStage; // 生命之树的种植阶段
-    public HashMap<UUID, Double> gameB_shovelTimer; // 玩家挖掘树穴计时器
-    public HashMap<UUID, Boolean> gameB_isShovelFinished; // 玩家挖掘树穴是否完成
-
     // 存储器引用
     public DataStorage storage;
 
@@ -72,11 +67,6 @@ public class DataInitiator {
         gameA_shuijingCost = new HashMap<>();
         gameA_huojianAmount = new HashMap<>();
         gameA_huojianCost = new HashMap<>();
-
-        // 初始化 gameB- 生命之树
-        gameB_plantStage = new HashMap<>();
-        gameB_shovelTimer = new HashMap<>();
-        gameB_isShovelFinished = new HashMap<>();
 
         // 初始化 测试内容
         isPlayerPressKeyW = new HashMap<>();
