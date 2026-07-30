@@ -9,15 +9,14 @@ import com.testPlugin_A.main.listenerLogic.inventoryClose.All_CloseLogic;
 import com.testPlugin_A.main.listenerLogic.timerExecuting.GameA_timerLogic;
 import com.testPlugin_A.main.listenerLogic.timerExecuting.GameB_timerLogic;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
+import org.bukkit.*;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -27,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.checkerframework.checker.units.qual.N;
 
@@ -97,6 +97,63 @@ public class Listener implements org.bukkit.event.Listener {
 
             }
         }.runTaskTimer(Main.main, 0L, 20L); // 20 tick = 1 秒
+    }
+
+    // （测试用的）随时间流逝持续执行的逻辑
+    public void timerLogic_forTest(){
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                for (Player player : Bukkit.getOnlinePlayers()) {
+
+                    UUID playerUUID = player.getUniqueId();
+
+                    // 当玩家按下W键时，执行移动
+                    if (data.isPlayerPressKeyW.getOrDefault(playerUUID, false)){
+                        // UUID playerUUID = player.getUniqueId();
+                        Entity vehicle = player.getVehicle();
+                        if (vehicle == null || !vehicle.isValid()){
+                            continue;
+                        }
+                        // 获取玩家水平朝向(yaw)，忽略上下俯仰
+                        float playerYaw = player.getLocation().getYaw();
+
+                        // 将 Yaw 转换为水平方向向量
+                        // yaw=0 时朝北(Z-)，yaw=90 时朝东(X+)
+                        double yawRad = Math.toRadians(playerYaw);
+                        double dx = -Math.sin(yawRad);
+                        double dz = Math.cos(yawRad);
+
+                        double speed = 0.2; // 每 tick 移动速度，可调
+
+                        // 移动 ArmorStand（朝玩家面向方向）
+                        Location newVehicleLoc = vehicle.getLocation().clone();
+                        newVehicleLoc.add(dx * speed, 0, dz * speed);
+                        newVehicleLoc.setYaw(playerYaw); // todo 载具也面朝旋转方向(但是载具隐形了，朝没朝向都一样的)
+                        newVehicleLoc.setPitch(0);
+                        vehicle.teleport(newVehicleLoc);
+
+                        // 获取实体的数据容器
+                        PersistentDataContainer pdc = vehicle.getPersistentDataContainer();
+
+                        // 读取挂着的展示方块实体 UUID，找到并处理逻辑
+                        NamespacedKey blockDisplayKey = new NamespacedKey(Main.main, "linked_blockDisplay");
+                        String blockDisplayUuidStr = pdc.get(blockDisplayKey, PersistentDataType.STRING);
+                        if (blockDisplayUuidStr != null){
+                            UUID blockDisplayUuid = UUID.fromString(blockDisplayUuidStr);
+                            Entity blockDisplay = Bukkit.getEntity(blockDisplayUuid);
+                            if (blockDisplay != null && blockDisplay.isValid()){ // Q:isValid()是啥意思？-> A:实体还活着，在世界中，可以操作
+                                // 让方块展示实体跟着移动
+                                Location newDisplayLoc = blockDisplay.getLocation().clone().add(dx * speed, 0, dz * speed);
+                                newDisplayLoc.setYaw(playerYaw); // 方块朝向玩家方向
+                                newDisplayLoc.setPitch(0);
+                                blockDisplay.teleport(newDisplayLoc);
+                            }
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(Main.main, 0L, 1L); // 1 tick = 1/20 秒
     }
 
     // 玩家退出容器时执行的逻辑
@@ -206,6 +263,64 @@ public class Listener implements org.bukkit.event.Listener {
             case "magic_wand" -> {
                 player.sendMessage("§d✦ 魔法发动！");
                 player.performCommand("tp_A game A");
+            }
+            case "summoner" -> {
+                player.sendMessage("§a✦ 召唤发动！");
+                removePDCItem(player, Main.main, "summoner", "special_item", 1);
+            }
+        }
+    }
+
+    // 玩家离开载具逻辑
+    @EventHandler
+    public void onDismount(EntityDismountEvent event){
+        Entity vehicle = event.getDismounted();
+        if (!(vehicle instanceof ArmorStand stand)) return;
+
+        // 检查是不是我们的座位
+        NamespacedKey key = new NamespacedKey(Main.main, "seat_entity");
+        if (!stand.getPersistentDataContainer().has(key, PersistentDataType.BYTE)) return;
+
+        // 延迟 1 tick 删除，避免事件期间删实体出问题
+        Bukkit.getScheduler().runTask(Main.main, () -> {
+
+            // 获取实体的数据容器
+            PersistentDataContainer pdc = stand.getPersistentDataContainer();
+
+            // 读取挂着的展示方块实体 UUID，找到并删除
+            NamespacedKey blockDisplayKey = new NamespacedKey(Main.main, "linked_blockDisplay");
+            String blockDisplayUuidStr = pdc.get(blockDisplayKey, PersistentDataType.STRING);
+            if (blockDisplayUuidStr != null){
+                UUID blockDisplayUuid = UUID.fromString(blockDisplayUuidStr);
+                Entity blockDisplay = Bukkit.getEntity(blockDisplayUuid);
+                if (blockDisplay != null && blockDisplay.isValid()){ // Q:isValid()是啥意思？-> A:实体还活着，在世界中，可以操作
+                    blockDisplay.remove();
+                }
+            }
+
+            if (stand.isValid()) stand.remove();
+        });
+    }
+
+    // 移除有STRING PDC标签的特定物品
+    public void removePDCItem(Player player, JavaPlugin plugin, String PDC, String keyName, int removeAmount){
+        NamespacedKey key = new NamespacedKey(plugin, keyName);
+
+        for (int i = 0; i < player.getInventory().getSize(); i++){
+            ItemStack item = player.getInventory().getItem(i);
+
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) continue;
+
+            // 检查PDC标签
+            String type = meta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+            if (PDC.equals(type)){
+                // 遍历到指定物品！减少
+                if (item.getAmount() > removeAmount){
+                    item.setAmount(item.getAmount() - removeAmount);
+                } else {
+                    player.getInventory().setItem(i, null); // 只剩removeAmount个(或更少)，直接全删
+                }
             }
         }
     }

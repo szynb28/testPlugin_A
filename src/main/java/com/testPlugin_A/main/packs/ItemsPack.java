@@ -259,4 +259,18 @@ public class ItemsPack {
         item.setItemMeta(meta);
         return item;
     }
+    static public ItemStack get__item_summoner(JavaPlugin plugin){
+        ItemStack item = new ItemStack(Material.ENDER_PEARL);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.customName(MiniMessage.miniMessage().deserialize("<gradient:green:dark_green>召唤器</gradient>"));
+        meta.lore(List.of(MiniMessage.miniMessage().deserialize("<gray>右键召唤神秘东西awa</gray>")));
+
+        // 给物品打PDC标签
+        NamespacedKey key = new NamespacedKey(plugin, "special_item");
+        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "summoner");
+
+        item.setItemMeta(meta);
+        return item;
+    }
 }

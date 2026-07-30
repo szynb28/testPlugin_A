@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Transformation;
+import org.checkerframework.checker.units.qual.N;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -74,24 +75,13 @@ public class TestCommand implements CommandExecutor {
             stand.customName(net.kyori.adventure.text.Component.text("§e§l[右键领取钻石]"));
 
             // 设置 Interaction 实体（负责捕获右键，完全隐形）
-            org.bukkit.entity.Interaction interaction = (org.bukkit.entity.Interaction) player.getWorld().spawnEntity(spawnLoc, EntityType.INTERACTION);
-            interaction.setInteractionWidth(1.0f); // 覆盖盔甲架区域
-            interaction.setInteractionHeight(2.0f);
-            interaction.setResponsive(true);       // 右键有反馈动画
+            org.bukkit.entity.Interaction interaction = get__rewardInteraction(spawnLoc, player);
 
             // 设置方块展示实体
             BlockDisplay blockDisplay = get__blockDisplay(playerLoc,
                     Material.DIAMOND_BLOCK,
                     new Vector3f(0f, .5f, 0f),
                     new Vector3f(.5f, .5f, .5f));
-
-            // 给Interaction打标签（PersistentDataContainer）
-            NamespacedKey rewardKey = new NamespacedKey(Main.main, "reward_entity");
-            interaction.getPersistentDataContainer().set(rewardKey, PersistentDataType.BYTE, (byte) 1); // (byte) 1 只是一个标记
-
-            // 给Interaction写入要执行的命令的标签
-            NamespacedKey cmdKey = new NamespacedKey(Main.main, "execute_command");
-            interaction.getPersistentDataContainer().set(cmdKey, PersistentDataType.STRING, "tp_A game A");
 
             // 把盔甲架的 UUID 存到 Interaction 的 PDC 里（*group ID）
             NamespacedKey standKey = new NamespacedKey(Main.main, "linked_stand");
@@ -105,12 +95,71 @@ public class TestCommand implements CommandExecutor {
             return true;
         }
 
-        // ./tp_A getspecialitem
+        // ./tp_A getspecialitem1
         if (args.length == 1 && args[0].equals("getspecialitem")){
             Player player = (Player) sender;
 
             player.getInventory().addItem(get__item_magicWand(Main.main));
             player.sendMessage("§6✦ 你获得了一根魔杖！");
+        }
+
+        // ./tp_A getspecialitem2
+        if (args.length == 1 && args[0].equals("getspecialitem2")){
+            Player player = (Player) sender;
+
+            player.getInventory().addItem(get__item_summoner(Main.main));
+            player.sendMessage("§a✦ 你获得了一个召唤器！");
+        }
+
+        // ./tp_A sit
+        if (args.length == 1 && args[0].equals("sitandmove")){
+            if (!(sender instanceof Player player)) return true;
+
+            // 如果已经坐下，则站起来
+            if (player.isInsideVehicle()){
+                player.leaveVehicle();
+                return true;
+            }
+
+            Location loc = player.getLocation();
+
+            // 生成隐形可移动座位
+            ArmorStand seat = player.getWorld().spawn(loc, ArmorStand.class, stand -> {
+                stand.setVisible(false);       // 隐形
+                stand.setGravity(false);       // 不掉下去
+                // stand.setMarker(true);      可移动载具用marker不稳定！这行先注释掉
+                stand.setSmall(true);          // 小尺寸
+                stand.setInvulnerable(true);   // 无敌
+                stand.setCustomNameVisible(false);
+                stand.setRemoveWhenFarAway(false); // 不会因为跑远了被刷掉
+
+                // 打标签，方便识别是“座位”
+                NamespacedKey key = new NamespacedKey(Main.main, "seat_entity");
+                stand.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
+            });
+
+            // 设置方块展示实体
+            BlockDisplay blockDisplay = get__blockDisplay(loc,
+                    Material.DIAMOND_BLOCK,
+                    new Vector3f(0f, 0f, 0f), // 生成的方块展示实体保持中央和玩家对齐
+                    new Vector3f(1f, 1f, 1f));
+
+            // ✦ 新增：把方块的视觉中心拉回实体位置！
+            blockDisplay.setTransformation(new org.bukkit.util.Transformation(
+                    new org.joml.Vector3f(-.5f, 0f, -.5f), // ← 关键！把中心往回拉(y可能也偏了，不过偏的刚刚好啊，正好看起来就像玩家坐在上面一样)
+                    new org.joml.Quaternionf(0, 0, 0, 1),
+                    new org.joml.Vector3f(1f, 1f, 1f),
+                    new org.joml.Quaternionf(0, 0, 0, 1)
+            ));
+
+            // 把展示方块实体的 UUID 存到 盔甲架 的 PDC 里（*group ID）
+            NamespacedKey blockDisplayKey = new NamespacedKey(Main.main, "linked_blockDisplay");
+            seat.getPersistentDataContainer().set(blockDisplayKey, PersistentDataType.STRING, blockDisplay.getUniqueId().toString());
+
+            // 玩家骑上去盔甲架
+            seat.addPassenger(player);
+            player.sendMessage("§a已坐下～ 按Shift站起来喵");
+            return true;
         }
 
         // ./tp_A game A

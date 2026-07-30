@@ -40,9 +40,16 @@ public class DataInitiator {
     // 存储器引用
     public DataStorage storage;
 
+    // 测试内容
+    public HashMap<UUID, Boolean> isPlayerPressKeyW; // 玩家是否按下W键
+    public HashMap<UUID, Boolean> isPlayerPressKeyS; // 玩家是否按下S键
+    public HashMap<UUID, Boolean> isPlayerPressKeyA; // 玩家是否按下A键
+    public HashMap<UUID, Boolean> isPlayerPressKeyD; // 玩家是否按下D键
+
     public DataInitiator(){
         // 初始化 全局内容
         scene = new HashMap<>();
+
         // 初始化 gameA- 曲奇点击
         gameA_cookieAmount = new HashMap<>();
         gameA_cookiePerSecond = new HashMap<>();
@@ -65,10 +72,14 @@ public class DataInitiator {
         gameA_shuijingCost = new HashMap<>();
         gameA_huojianAmount = new HashMap<>();
         gameA_huojianCost = new HashMap<>();
+
         // 初始化 gameB- 生命之树
         gameB_plantStage = new HashMap<>();
         gameB_shovelTimer = new HashMap<>();
         gameB_isShovelFinished = new HashMap<>();
+
+        // 初始化 测试内容
+        isPlayerPressKeyW = new HashMap<>();
     }
 
     // 初始化全局内容的值

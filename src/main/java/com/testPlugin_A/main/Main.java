@@ -3,6 +3,7 @@ package com.testPlugin_A.main;
 import com.testPlugin_A.data.DataInitiator;
 import com.testPlugin_A.data.DataStorage;
 import com.testPlugin_A.main.listenerLogic.Listener;
+import com.testPlugin_A.main.listenerLogic.VehicleDriveListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -37,6 +38,11 @@ public final class Main extends JavaPlugin {
 
         // 调用随时间流逝持续执行的逻辑
         listener.timerLogic();
+        listener.timerLogic_forTest();
+
+        // PacketEvents的监听逻辑
+        com.github.retrooper.packetevents.PacketEvents.getAPI()
+                .getEventManager().registerListener(new VehicleDriveListener(data));
 
         // 生成配置文件
         saveDefaultConfig();

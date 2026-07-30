@@ -8,6 +8,17 @@ load: POSTWORLD
 
 authors: [ 天辰Stry ]
 
+depend:
+  - packetevents
+
+softdepend:
+  - ProtocolLib
+  - ProtocolSupport
+  - ViaVersion
+  - ViaBackwards
+  - ViaRewind
+  - Geyser-Spigot
+
 commands:
   testCommand:
     description: "测试指令"
