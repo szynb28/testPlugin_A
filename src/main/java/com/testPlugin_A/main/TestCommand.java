@@ -3,6 +3,7 @@ package com.testPlugin_A.main;
 import com.testPlugin_A.data.DataInitiator;
 import com.testPlugin_A.gameb.GameBService;
 import com.testPlugin_A.gameb.gui.GameBMenus;
+import com.testPlugin_A.minigames.core.ArcadeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,10 +31,12 @@ public class TestCommand implements CommandExecutor {
 
     private final DataInitiator data;
     private final GameBMenus gameBMenus;
+    private final ArcadeManager arcadeManager;
 
-    public TestCommand(DataInitiator data, GameBService gameBService, GameBMenus gameBMenus){
+    public TestCommand(DataInitiator data, GameBService gameBService, GameBMenus gameBMenus, ArcadeManager arcadeManager){
         this.data = data;
         this.gameBMenus = gameBMenus;
+        this.arcadeManager = arcadeManager;
     }
 
     @Override
@@ -264,6 +267,25 @@ public class TestCommand implements CommandExecutor {
             data.scene.put(player.getUniqueId(), "gameB");
 
             return true;
+        }
+
+        // ./tp_A arcade：打开五个新 GUI 小游戏的统一大厅
+        if (args.length == 1 && args[0].equalsIgnoreCase("arcade")) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("只有玩家能打开小游戏大厅。");
+                return true;
+            }
+            arcadeManager.openHub(player);
+            return true;
+        }
+
+        // 也允许直接进入：/tp_A game pet|snake|miner|fishing|alchemy
+        if (args.length == 2 && args[0].equalsIgnoreCase("game")) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("只有玩家能打开小游戏。");
+                return true;
+            }
+            if (arcadeManager.openGame(player, args[1])) return true;
         }
 
         return false;

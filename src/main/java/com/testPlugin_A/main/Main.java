@@ -8,6 +8,7 @@ import com.testPlugin_A.gameb.GameBService;
 import com.testPlugin_A.gameb.GameBStorage;
 import com.testPlugin_A.gameb.gui.GameBMenus;
 import com.testPlugin_A.main.listenerLogic.Listener;
+import com.testPlugin_A.minigames.core.ArcadeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,6 +24,7 @@ public final class Main extends JavaPlugin {
     public GameBRepository gameBRepository;
     public GameBService gameBService;
     public GameBMenus gameBMenus;
+    public ArcadeManager arcadeManager;
 
     @Override
     public void onEnable() {
@@ -40,17 +42,19 @@ public final class Main extends JavaPlugin {
         gameBStorage.load(gameBRepository);
         gameBService = new GameBService(gameBRepository, GameBConfig.from(getConfig()));
         gameBMenus = new GameBMenus(this, gameBService);
+        arcadeManager = new ArcadeManager(this);
 
         // 加载已有数据（没有就保持默认）
         storage.load(data);
 
         // 创建command和listener实例
         listener = new Listener(data, gameBService, gameBMenus);
-        testCommand = new TestCommand(data, gameBService, gameBMenus);
+        testCommand = new TestCommand(data, gameBService, gameBMenus, arcadeManager);
 
         // 传递同一个 dataInitiator 给 Listener 和 TestCommand
         Bukkit.getPluginCommand("testCommand").setExecutor(testCommand);
         Bukkit.getPluginManager().registerEvents(listener, this);
+        arcadeManager.start();
 
         // 调用随时间流逝持续执行的逻辑
         listener.timerLogic();
@@ -64,6 +68,7 @@ public final class Main extends JavaPlugin {
             public void run(){
                 storage.save(data);
                 gameBStorage.save(gameBRepository);
+                arcadeManager.save();
                 getLogger().info("小游戏数据已自动保存");
             }
         }.runTaskTimer(this, 1200L, 1200L);  // 1200 ticks = 60秒 = 1分钟
@@ -80,6 +85,7 @@ public final class Main extends JavaPlugin {
         if (storage != null && data != null){
             storage.save(data);
             gameBStorage.save(gameBRepository);
+            arcadeManager.save();
             getLogger().info("gameA数据已保存（插件关闭）");
         }
 
